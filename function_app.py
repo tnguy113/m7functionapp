@@ -8,20 +8,18 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 @app.route(route="http_m7name_trigger", auth_level=func.AuthLevel.ANONYMOUS)
 def http_m7name_trigger(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-
+    
+    # Parse query parameter name
     name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
+    logging.info(f'Param name = {name}.')
+    
+    # If name is provided in the query string, use it as the file content, build the file name and upload to blob container
     if name:
-        file_name = f'name-{str(uuid.uuid4()).split("-")[0]}'
+        file_name = f'name-{str(uuid.uuid4()).split("-")[0]}.txt'
         write_to_blob_storage(file_name, name)
         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    
+    # If name is not provided in the query string, send the response with a default message with status code 200
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
@@ -29,11 +27,21 @@ def http_m7name_trigger(req: func.HttpRequest) -> func.HttpResponse:
         )
 
 def write_to_blob_storage(file_name, content):
+    """
+    Uploads a file to blob storage with the given file name and content.
+
+    Parameters:
+    file_name (str): The name of the file to be uploaded.
+    content (str): The content of the file to be uploaded.
+
+    Returns:
+    None
+    """
     try:
         blobServiceClient = BlobServiceClient.from_connection_string('DefaultEndpointsProtocol=https;AccountName=blobstrgm5;AccountKey=qmbk2otAIGUo+URZYZTbFtD6ZbVWp5+5vsYv9bWDTlbIsFNMHYFHBedagCQexDG4xvX+bHE+MaJg+AStjmiAJw==;EndpointSuffix=core.windows.net')
         containerClient = blobServiceClient.get_container_client('output-data')
         blobClient = containerClient.get_blob_client(blob=file_name)
         blobClient.upload_blob(content)
-        logging.info(f'Create new file {file_name} successfully.')
+        logging.info(f'Created new file "{file_name}.txt" successfully.')
     except Exception as e:
         logging.error(f'An exception is found: {e}')
