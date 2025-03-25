@@ -33,7 +33,7 @@ def write_to_blob_storage(file_name, content):
         blobServiceClient = BlobServiceClient.from_connection_string('DefaultEndpointsProtocol=https;AccountName=blobstrgm5;AccountKey=qmbk2otAIGUo+URZYZTbFtD6ZbVWp5+5vsYv9bWDTlbIsFNMHYFHBedagCQexDG4xvX+bHE+MaJg+AStjmiAJw==;EndpointSuffix=core.windows.net')
         containerClient = blobServiceClient.get_container_client('output-data')
         blobClient = containerClient.get_blob_client(blob=file_name)
-        blobClient.upload_blob(content, overwirte=True)
+        blobClient.upload_blob(content)
         logging.info(f'Create new file {file_name} successfully.')
     except Exception as e:
         logging.error(f'An exception is found: {e}')
