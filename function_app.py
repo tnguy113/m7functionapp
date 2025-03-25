@@ -30,7 +30,7 @@ def http_m7name_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
 def write_to_blob_storage(file_name, content):
     try:
-        blobServiceClient = BlobServiceClient.from_connection_string('DefaultEndpointsProtocol=https;AccountName=m7functionapprg9b35;AccountKey=y/sCqYrU40YZS6czxWX9PEeOQYVB5NA4uiDtkwsCSDmhrTZs/HdCkJ0Q/6OmPJkpLCMahHeZpUvB+ASt6CQMyQ==;EndpointSuffix=core.windows.net')
+        blobServiceClient = BlobServiceClient.from_connection_string('DefaultEndpointsProtocol=https;AccountName=blobstrgm5;AccountKey=qmbk2otAIGUo+URZYZTbFtD6ZbVWp5+5vsYv9bWDTlbIsFNMHYFHBedagCQexDG4xvX+bHE+MaJg+AStjmiAJw==;EndpointSuffix=core.windows.net')
         containerClient = blobServiceClient.get_container_client('output-data')
         blobClient = containerClient.get_blob_client(blob=file_name)
         blobClient.upload_blob(content, overwirte=True)
