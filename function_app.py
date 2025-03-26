@@ -7,7 +7,7 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 
 @app.route(route="http_to_blob_trigger", auth_level=func.AuthLevel.ANONYMOUS)
-def http_m7name_trigger(req: func.HttpRequest) -> func.HttpResponse:
+def http_to_blob_trigger(req: func.HttpRequest) -> func.HttpResponse:
     """
     HTTP trigger function that responds to a GET request with a personalized message.
 
